@@ -1,55 +1,114 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 
-void inputMatrix(int matrix[10][10], int n) {
-    int i, j;
-    printf("Enter elements of the matrix:\n");
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < n; j++) {
-            scanf("%d", &matrix[i][j]);
-        }
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+void insert_end(int value) {
+    struct node *newNode, *temp;
+
+    newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
     }
+
+    temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+}
+
+// Delete last node
+void delete_end() {
+    struct node *temp, *prev;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    // If only one node
+    if (head->next == NULL) {
+        free(head);
+        head = NULL;
+        printf("Last node deleted\n");
+        return;
+    }
+
+    temp = head;
+    while (temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = NULL;
+    free(temp);
+
+    printf("Last node deleted\n");
 }
 
 
-void displayMatrix(int matrix[10][10], int n) {
-    int i, j;
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < n; j++) {
-            printf("%d\t", matrix[i][j]);
-        }
-        printf("\n");
-    }
-}
+void display() {
+    struct node *temp = head;
 
-
-void transpose(int matrix[10][10], int n) {
-    int i, j;
-    printf("Transpose of the matrix:\n");
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < n; j++) {
-            printf("%d\t", matrix[j][i]);
-        }
-        printf("\n");
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
     }
+
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
 }
 
 int main() {
-    int matrix[10][10], n;
+    int choice, value;
 
-    
-    printf("Enter order of square matrix: ");
-    scanf("%d", &n);
+    while (1) {
+        printf("\n1. Insert at end\n");
+        printf("2. Delete last node\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
 
-    
-    inputMatrix(matrix, n);
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    
-    printf("Original Matrix:\n");
-    displayMatrix(matrix, n);
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insert_end(value);
+                break;
 
-    
-    transpose(matrix, n);
+            case 2:
+                delete_end();
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
 
     return 0;
 }

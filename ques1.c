@@ -1,66 +1,91 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-void multiply(int a[10][10], int b[10][10], int c[10][10], int r1, int c1, int c2) {
-    int i, j, k;
 
-    for(i = 0; i < r1; i++) {
-        for(j = 0; j < c2; j++) {
-            c[i][j] = 0;
-            for(k = 0; k < c1; k++) {
-                c[i][j] += a[i][k] * b[k][j];
-            }
-        }
-    }
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+
+void insert_begin(int value) {
+    struct node *newNode;
+    newNode = (struct node*)malloc(sizeof(struct node));
+
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
 }
 
 
-void display(int matrix[10][10], int r, int c) {
-    int i, j;
-    for(i = 0; i < r; i++) {
-        for(j = 0; j < c; j++) {
-            printf("%d\t", matrix[i][j]);
-        }
-        printf("\n");
+void delete_begin() {
+    struct node *temp;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
     }
+
+    temp = head;
+    head = head->next;
+    free(temp);
+
+    printf("First node deleted\n");
+}
+
+
+void display() {
+    struct node *temp = head;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
 }
 
 int main() {
-    int a[10][10], b[10][10], c[10][10];
-    int r1, c1, r2, c2, i, j;
+    int choice, value;
 
-    
-    printf("Enter rows and columns of Matrix A: ");
-    scanf("%d %d", &r1, &c1);
+    while (1) {
+        printf("\n1. Insert at beginning\n");
+        printf("2. Delete first node\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
 
-    printf("Enter rows and columns of Matrix B: ");
-    scanf("%d %d", &r2, &c2);
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    
-    if(c1 != r2) {
-        printf("Matrix multiplication not possible!\n");
-        return 0;
-    }
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insert_begin(value);
+                break;
 
-    printf("Enter elements of Matrix A:\n");
-    for(i = 0; i < r1; i++) {
-        for(j = 0; j < c1; j++) {
-            scanf("%d", &a[i][j]);
+            case 2:
+                delete_begin();
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
         }
     }
-
-    
-    printf("Enter elements of Matrix B:\n");
-    for(i = 0; i < r2; i++) {
-        for(j = 0; j < c2; j++) {
-            scanf("%d", &b[i][j]);
-        }
-    }
-
-    
-    multiply(a, b, c, r1, c1, c2);
-    
-    printf("Resultant Matrix:\n");
-    display(c, r1, c2);
 
     return 0;
 }

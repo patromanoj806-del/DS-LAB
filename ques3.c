@@ -1,78 +1,116 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 
-void inputMatrix(int a[4][4]) {
-    int i, j;
-    printf("Enter elements of 4x4 matrix:\n");
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
-            scanf("%d", &a[i][j]);
-        }
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+
+void insert_at_location(int value, int pos) {
+    struct node *newNode, *temp;
+    int i;
+
+    newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    
+    if (pos == 1) {
+        newNode->next = head;
+        head = newNode;
+        return;
     }
+
+    temp = head;
+    for (i = 1; i < pos - 1 && temp != NULL; i++) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Invalid position\n");
+        return;
+    }
+
+    newNode->next = temp->next;
+    temp->next = newNode;
 }
 
 
-void displayMatrix(int a[4][4]) {
-    int i, j;
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
-            printf("%d\t", a[i][j]);
+void search(int key) {
+    struct node *temp = head;
+    int pos = 1;
+
+    while (temp != NULL) {
+        if (temp->data == key) {
+            printf("Element found at position %d\n", pos);
+            return;
         }
-        printf("\n");
+        temp = temp->next;
+        pos++;
     }
+
+    printf("Element not found\n");
 }
 
 
-void sparseCheck(int a[4][4]) {
-    int i, j, count = 0;
+void display() {
+    struct node *temp = head;
 
-    
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
-            if(a[i][j] != 0) {
-                count++;
-            }
-        }
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
     }
 
-    
-    if(count <= (16 / 2)) {
-        printf("Matrix is a Sparse Matrix\n");
-
-        int sparse[16][3];
-        int k = 0;
-
-        for(i = 0; i < 4; i++) {
-            for(j = 0; j < 4; j++) {
-                if(a[i][j] != 0) {
-                    sparse[k][0] = i;
-                    sparse[k][1] = j;
-                    sparse[k][2] = a[i][j];
-                    k++;
-                }
-            }
-        }
-
-        
-        printf("Sparse Matrix (row col value):\n");
-        for(i = 0; i < k; i++) {
-            printf("%d\t%d\t%d\n", sparse[i][0], sparse[i][1], sparse[i][2]);
-        }
-
-    } else {
-        printf("Matrix is NOT a Sparse Matrix\n");
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
     }
+    printf("NULL\n");
 }
 
 int main() {
-    int a[4][4];
+    int choice, value, pos, key;
 
-    inputMatrix(a);
+    while (1) {
+        printf("\n1. Insert at location\n");
+        printf("2. Search element\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
 
-    printf("Original Matrix:\n");
-    displayMatrix(a);
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    sparseCheck(a);
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                printf("Enter position: ");
+                scanf("%d", &pos);
+                insert_at_location(value, pos);
+                break;
+
+            case 2:
+                printf("Enter element to search: ");
+                scanf("%d", &key);
+                search(key);
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
 
     return 0;
 }

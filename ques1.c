@@ -1,63 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-
 struct node {
     int data;
     struct node *next;
 };
 
-struct node *head = NULL;
+struct node *top = NULL;
 
-
-void insert_begin(int value) {
+void push(int value) {
     struct node *newNode;
     newNode = (struct node*)malloc(sizeof(struct node));
 
+    if (newNode == NULL) {
+        printf("Stack Overflow\n");
+        return;
+    }
+
     newNode->data = value;
-    newNode->next = head;
-    head = newNode;
+    newNode->next = top;
+    top = newNode;
+
+    printf("Inserted %d\n", value);
 }
 
-
-void delete_begin() {
+void pop() {
     struct node *temp;
 
-    if (head == NULL) {
-        printf("List is empty\n");
+    if (top == NULL) {
+        printf("Stack Underflow\n");
         return;
     }
 
-    temp = head;
-    head = head->next;
+    temp = top;
+    printf("Deleted element: %d\n", top->data);
+    top = top->next;
     free(temp);
-
-    printf("First node deleted\n");
 }
 
-
 void display() {
-    struct node *temp = head;
+    struct node *temp = top;
 
-    if (head == NULL) {
-        printf("List is empty\n");
+    if (top == NULL) {
+        printf("Stack is empty\n");
         return;
     }
 
-    printf("Linked List: ");
+    printf("Stack elements:\n");
     while (temp != NULL) {
-        printf("%d -> ", temp->data);
+        printf("%d\n", temp->data);
         temp = temp->next;
     }
-    printf("NULL\n");
 }
 
 int main() {
     int choice, value;
 
     while (1) {
-        printf("\n1. Insert at beginning\n");
-        printf("2. Delete first node\n");
+        printf("\n1. Push\n");
+        printf("2. Pop\n");
         printf("3. Display\n");
         printf("4. Exit\n");
 
@@ -68,11 +68,11 @@ int main() {
             case 1:
                 printf("Enter value: ");
                 scanf("%d", &value);
-                insert_begin(value);
+                push(value);
                 break;
 
             case 2:
-                delete_begin();
+                pop();
                 break;
 
             case 3:

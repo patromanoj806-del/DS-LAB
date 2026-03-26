@@ -2,77 +2,85 @@
 #include <stdlib.h>
 struct node {
     int data;
+    struct node *prev;
     struct node *next;
 };
 
-struct node *front = NULL, *rear = NULL;
+struct node *head = NULL;
+void insert_end(int value) {
+    struct node *newNode, *temp;
 
-
-void enqueue(int value) {
-    struct node *newNode;
     newNode = (struct node*)malloc(sizeof(struct node));
-
-    if (newNode == NULL) {
-        printf("Queue Overflow\n");
-        return;
-    }
-
     newNode->data = value;
     newNode->next = NULL;
 
-    if (rear == NULL) {
-        front = rear = newNode;
-    } else {
-        rear->next = newNode;
-        rear = newNode;
-    }
-
-    printf("Inserted %d\n", value);
-}
-
-
-void dequeue() {
-    struct node *temp;
-
-    if (front == NULL) {
-        printf("Queue Underflow\n");
+    
+    if (head == NULL) {
+        newNode->prev = NULL;
+        head = newNode;
         return;
     }
 
-    temp = front;
-    printf("Deleted element: %d\n", front->data);
-    front = front->next;
-
-    if (front == NULL) {
-        rear = NULL;
+    temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
     }
 
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+
+void delete_end() {
+    struct node *temp;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    
+    if (head->next == NULL) {
+        free(head);
+        head = NULL;
+        printf("Last node deleted\n");
+        return;
+    }
+
+    temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->prev->next = NULL;
     free(temp);
+
+    printf("Last node deleted\n");
 }
 
 
 void display() {
-    struct node *temp = front;
+    struct node *temp = head;
 
-    if (front == NULL) {
-        printf("Queue is empty\n");
+    if (head == NULL) {
+        printf("List is empty\n");
         return;
     }
 
-    printf("Queue elements:\n");
+    printf("Doubly Linked List: ");
     while (temp != NULL) {
-        printf("%d ", temp->data);
+        printf("%d <-> ", temp->data);
         temp = temp->next;
     }
-    printf("\n");
+    printf("NULL\n");
 }
 
 int main() {
     int choice, value;
 
     while (1) {
-        printf("\n1. Enqueue\n");
-        printf("2. Dequeue\n");
+        printf("\n1. Insert at end\n");
+        printf("2. Delete last node\n");
         printf("3. Display\n");
         printf("4. Exit\n");
 
@@ -83,11 +91,11 @@ int main() {
             case 1:
                 printf("Enter value: ");
                 scanf("%d", &value);
-                enqueue(value);
+                insert_end(value);
                 break;
 
             case 2:
-                dequeue();
+                delete_end();
                 break;
 
             case 3:

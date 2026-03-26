@@ -2,62 +2,70 @@
 #include <stdlib.h>
 struct node {
     int data;
+    struct node *prev;
     struct node *next;
 };
 
-struct node *top = NULL;
+struct node *head = NULL;
 
-void push(int value) {
+void insert_begin(int value) {
     struct node *newNode;
     newNode = (struct node*)malloc(sizeof(struct node));
 
-    if (newNode == NULL) {
-        printf("Stack Overflow\n");
-        return;
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = head;
+
+    if (head != NULL) {
+        head->prev = newNode;
     }
 
-    newNode->data = value;
-    newNode->next = top;
-    top = newNode;
-
-    printf("Inserted %d\n", value);
+    head = newNode;
 }
 
-void pop() {
+
+void delete_begin() {
     struct node *temp;
 
-    if (top == NULL) {
-        printf("Stack Underflow\n");
+    if (head == NULL) {
+        printf("List is empty\n");
         return;
     }
 
-    temp = top;
-    printf("Deleted element: %d\n", top->data);
-    top = top->next;
+    temp = head;
+    head = head->next;
+
+    if (head != NULL) {
+        head->prev = NULL;
+    }
+
     free(temp);
+    printf("First node deleted\n");
 }
 
-void display() {
-    struct node *temp = top;
 
-    if (top == NULL) {
-        printf("Stack is empty\n");
+void display() {
+    struct node *temp = head;
+
+    if (head == NULL) {
+        printf("List is empty\n");
         return;
     }
 
-    printf("Stack elements:\n");
+    printf("Doubly Linked List: ");
     while (temp != NULL) {
-        printf("%d\n", temp->data);
+        printf("%d <-> ", temp->data);
         temp = temp->next;
     }
+    printf("NULL\n");
 }
 
 int main() {
     int choice, value;
 
     while (1) {
-        printf("\n1. Push\n");
-        printf("2. Pop\n");
+        printf("\n1. Insert at beginning\n");
+        printf("2. Delete first node\n");
         printf("3. Display\n");
         printf("4. Exit\n");
 
@@ -68,11 +76,11 @@ int main() {
             case 1:
                 printf("Enter value: ");
                 scanf("%d", &value);
-                push(value);
+                insert_begin(value);
                 break;
 
             case 2:
-                pop();
+                delete_begin();
                 break;
 
             case 3:

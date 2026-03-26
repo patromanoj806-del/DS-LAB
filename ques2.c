@@ -1,52 +1,55 @@
 #include <stdio.h>
 
 
-void insert(int arr[], int *n, int element, int position) {
-    int i;
-
-    
-    for(i = *n; i > position; i--) {
-        arr[i] = arr[i - 1];
+void inputMatrix(int matrix[10][10], int n) {
+    int i, j;
+    printf("Enter elements of the matrix:\n");
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < n; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
     }
-
-    arr[position] = element;
-    (*n)++;
 }
 
 
-void display(int arr[], int n) {
-    int i;
-    printf("Array elements are:\n");
+void displayMatrix(int matrix[10][10], int n) {
+    int i, j;
     for(i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+        for(j = 0; j < n; j++) {
+            printf("%d\t", matrix[i][j]);
+        }
+        printf("\n");
     }
-    printf("\n");
+}
+
+
+void transpose(int matrix[10][10], int n) {
+    int i, j;
+    printf("Transpose of the matrix:\n");
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < n; j++) {
+            printf("%d\t", matrix[j][i]);
+        }
+        printf("\n");
+    }
 }
 
 int main() {
-    int arr[20], n, i, element, position;
+    int matrix[10][10], n;
 
-
-    printf("Enter number of elements: ");
+    
+    printf("Enter order of square matrix: ");
     scanf("%d", &n);
 
     
-    printf("Enter elements:\n");
-    for(i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
-    }
+    inputMatrix(matrix, n);
 
     
-    printf("Enter element to insert: ");
-    scanf("%d", &element);
-
-    printf("Enter position (0 to %d): ", n);
-    scanf("%d", &position);
-
-    insert(arr, &n, element, position);
+    printf("Original Matrix:\n");
+    displayMatrix(matrix, n);
 
     
-    display(arr, n);
+    transpose(matrix, n);
 
     return 0;
 }
